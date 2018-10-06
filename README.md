@@ -31,9 +31,9 @@ remote emulator logs set to enabled successfully
 Also make sure that your firewall rules allow access to the ICAP server port 1344/TCP on the TEX appliance or security gateway.
 
 ### Prepare the F5 BIG-IP
-#### Import the f5.checkpoint_sandblast_icap iApp template
-#### Create a new Application with use of the f5.checkpoint_sandblast_icap iApp template
-#### Add the newly created Request/Response Adapt profiles
+For detailed instructions on how to use this iApp template visit DevCentral. See the link below.
+
+https://devcentral.f5.com/codeshare/iapp-template-to-integrate-f5-big-ip-with-check-point-sandblast-icap-server-1173
 
 ### Notes
 This iApp template is based on the OPSWAT F5 iApp template that can be found here: https://github.com/OPSWAT/F5-iApp
