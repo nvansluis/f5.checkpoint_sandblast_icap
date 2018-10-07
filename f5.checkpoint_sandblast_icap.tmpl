@@ -1,4 +1,4 @@
-#TMSH-VERSION: 11.6.1
+#TMSH-VERSION: 14.0.0.1
 
 cli admin-partitions {
     update-partition Common
@@ -55,6 +55,7 @@ if { [iapp::is ::icap_pool__pool_to_use "/#create_new#"] } {
 iapp::conf create ltm virtual $vs_name internal profiles add \{tcp \{\} $profile_name \{\}\} pool $pool_name
 iapp::conf create ltm profile request-adapt $req_name defaults-from requestadapt preview-size 0 internal-virtual $vs_name service-down-action $req_sda
 iapp::conf create ltm profile response-adapt $resp_name defaults-from responseadapt preview-size 0 internal-virtual $vs_name service-down-action $resp_sda
+iapp::conf modify ltm pool $pool_name queue-on-connection-limit enabled
 
 iapp::template stop
             }
@@ -66,7 +67,7 @@ iapp::template stop
 define choice servicedownaction { "Ignore" => "ignore", "Reset" => "reset", "Drop" => "drop"}
 
 section introduction {
-    message intro_str "This is a template for making the process of creating ICAP related elements (nodes, pool, internal virtual server, profiles) easier in one place. The newly created request and response adapt profiles can be set for standard virtual servers so they can make use of Check Point SandBlast ICAP Server."
+    message intro_str "This is an iApp template that creates ICAP related elements (nodes, pool, internal virtual server, profiles). The newly created request and response adapt profiles can be used by standard virtual servers so they can interact with a Check Point SandBlast ICAP Server."
 }
 
 section options {
@@ -109,7 +110,7 @@ section icap_pool {
                 return [iapp::get_items ltm node]
             }
             string port display "small" required default "1344" validator "PortNumber"
-            string connection_limit display "small" required default "0" validator "NonNegativeNumber"
+            string connection_limit display "small" required default "100" validator "NonNegativeNumber"
         }
         optional (options.inline_help == "Yes") {
             message new_pool_help
@@ -191,7 +192,7 @@ text {
     icap_pool.members.port "Port"
     icap_pool.members.connection_limit "Connection limit"
     icap_pool.pool_help "" "Please select if you want to create a new pool or use an existing one. This pool will be set for the new ICAP internal virtual server."
-    icap_pool.new_pool_help "" "Add nodes for the new pool either by selecting existing ones or create new ones by typing the nodes' IP addresses. These nodes should have a running SandBlast ICAP Server on the given ports."
+    icap_pool.new_pool_help "" "Add nodes for the new pool either by selecting existing ones or create new ones by typing the nodes' IP addresses. These nodes should have a running SandBlast ICAP Server on the given ports. The default connection limit is set to 100 connections. Per default a SandBlast ICAP Server can only handle 100 concurrent connections. Also note that Request Queueing on the pool is enabled."
 
     icap_pool_monitor "Pool monitor"
     icap_pool_monitor.monitor "Select a monitor for the pool"
